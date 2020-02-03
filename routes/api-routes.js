@@ -9,24 +9,25 @@ router.get("/all", (req, res) => {
 });
 
 router.get("/find/:id", (req, res) => {
-  db.Todo.find({ _id: req.params.id }).then(todo => {
-    res.send(todo);
+  db.Todo.find({ _id: req.params.id }).then(foundTodo => {
+    res.send(foundTodo);
   });
 });
 
 router.post("/new", (req, res) => {
-  let newTodo = new db.Todo({ text: req.body.text });
-  newTodo.save().then(() => {
-    res.send("saved");
-  });
+  db.Todo.create({ text: req.body.text, complete: req.body.complete }).then(
+    newTodo => {
+      res.send(newTodo);
+    }
+  );
 });
 
 router.patch("/update", (req, res) => {
   db.Todo.findOneAndUpdate(
     { _id: req.query.id },
     { text: req.query.text }
-  ).then(() => {
-    res.send("success");
+  ).then(updatedTodo => {
+    res.send({ message: "success", todo: updatedTodo });
   });
 });
 
